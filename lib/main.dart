@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/provider/TaskProvider.dart';
-import 'package:todo_app/ui/dashboard/dashboard.dart';
+import 'package:todo_app/constants/colors.dart';
+import 'package:todo_app/providers/login_provider.dart';
+import 'package:todo_app/providers/task_provider.dart';
+import 'package:todo_app/ui/auth/authentication_wrapper.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TaskProvider()),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
       ],
       child: const MyApp(),
     ),
@@ -18,19 +21,18 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       ensureScreenSize: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'ProTracker',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors().linkWater),
           useMaterial3: true,
         ),
-        home: const Dashboard(),
+        home: const AuthenticationWrapper(),
       ),
     );
   }

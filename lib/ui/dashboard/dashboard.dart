@@ -1,8 +1,9 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/provider/TaskProvider.dart';
+import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/ui/widget/custom_floating_button.dart';
 import 'package:todo_app/ui/widget/custom_input_field.dart';
 import 'package:todo_app/ui/widget/submit_button.dart';
@@ -15,7 +16,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TodoAppBar(
-        title: "Todo List",
+        title: "ProTasker",
         onMenuFun: () => log("Menu Icon Pressed!!!"),
       ),
       body: Consumer<TaskProvider>(builder: (context, value, child) {
@@ -80,28 +81,32 @@ void _showBottonSheet(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const SizedBox(height: 10),
-                CustomInputField(
-                  controller: value.taskNameController,
-                  labelText: "Task name",
-                  fieldValidator: (value) {
-                    if (value == null || value == "") {
-                      return 'This field is required!';
-                    }
-                    return null;
-                  },
+                Expanded(
+                  child: CustomInputField(
+                    controller: value.taskNameController,
+                    hintText: "Task name",
+                    fieldValidator: (value) {
+                      if (value == null || value == "") {
+                        return 'This field is required!';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 // const SizedBox(height: 10),
-                CustomInputField(
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  controller: value.taskDescriptionController,
-                  labelText: "Task description",
-                  fieldValidator: (value) {
-                    if (value == null || value == "") {
-                      return 'This field is required!';
-                    }
-                    return null;
-                  },
+                Expanded(
+                  child: CustomInputField(
+                    maxLines: 3,
+                    keyboardType: TextInputType.multiline,
+                    controller: value.taskDescriptionController,
+                    hintText: "Task description",
+                    fieldValidator: (value) {
+                      if (value == null || value == "") {
+                        return 'This field is required!';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 const SizedBox(height: 15),
                 SubmitButton(

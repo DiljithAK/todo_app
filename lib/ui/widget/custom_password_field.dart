@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/colors.dart';
 
-class CustomInputField extends StatelessWidget {
+class CustomPasswordField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String? Function(String?)? fieldValidator;
-  final TextInputType? keyboardType;
-  final int maxLines;
+  final bool isObscure;
+  final void Function()? eyeBtnonPress;
 
-  const CustomInputField({
+  const CustomPasswordField({
     super.key,
     required this.controller,
     required this.hintText,
     this.fieldValidator,
-    this.keyboardType,
-    this.maxLines = 1,
+    required this.isObscure,
+    this.eyeBtnonPress,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      maxLines: maxLines,
       controller: controller,
-      keyboardType: keyboardType,
+      obscureText: isObscure,
       decoration: InputDecoration(
         hintText: hintText,
         filled: true,
@@ -30,8 +29,14 @@ class CustomInputField extends StatelessWidget {
         contentPadding:
             const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide.none),
+        suffixIcon: IconButton(
+          iconSize: 18,
+          color: Colors.grey[600],
+          icon: Icon(isObscure ? Icons.visibility : Icons.visibility_off),
+          onPressed: eyeBtnonPress,
+        ),
       ),
       validator: fieldValidator,
     );
