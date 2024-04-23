@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/constants/colors.dart';
 import 'package:todo_app/providers/login_provider.dart';
+import 'package:todo_app/ui/dashboard/dashboard.dart';
 import 'package:todo_app/ui/widget/custom_input_field.dart';
 import 'package:todo_app/ui/widget/custom_password_field.dart';
 
@@ -61,10 +60,21 @@ class LoginScreen extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 1,
                     height: 45,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (loginProvider.loginKey.currentState!.validate()) {
-                          final login = loginProvider.login();
-                          inspect(login);
+                          BuildContext context =
+                              loginProvider.loginKey.currentContext!;
+                          final login = await loginProvider.login();
+                          if (login['status'] == 1) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Dashboard()));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(login['message'])),
+                            );
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

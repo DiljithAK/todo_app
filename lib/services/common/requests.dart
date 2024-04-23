@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 import 'package:todo_app/services/common/api_constants.dart';
@@ -16,7 +18,7 @@ class Requests {
     try {
       return await http.post(
         Uri.parse("${APIConstants.baseURL}$url"),
-        body: body,
+        body: jsonEncode(body),
         headers: APIConstants.jsonHeader,
       );
     } catch (e) {
