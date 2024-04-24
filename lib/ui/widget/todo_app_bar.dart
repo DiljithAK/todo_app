@@ -9,12 +9,16 @@ class TodoAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.black,
-      leading: IconButton(
-          onPressed: onMenuFun,
-          icon: const Icon(Icons.menu, color: Colors.white)),
-      title: Center(
-          child: Text(title, style: const TextStyle(color: Colors.white)))
+      title: Text(title, style: TextStyle(color: Colors.grey[800])),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 23.0),
+          child: IconButton(
+            onPressed: onMenuFun,
+            icon: Icon(Icons.sort, color: Colors.grey[800]),
+          ),
+        ),
+      ],
     );
   }
 

@@ -69,7 +69,7 @@ class LoginScreen extends StatelessWidget {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Dashboard()));
+                                    builder: (context) => Dashboard(username: login['name']??'')));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(login['message'])),
@@ -81,7 +81,7 @@ class LoginScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        backgroundColor: AppColors().bd,
+                        backgroundColor: AppColors().paleBlue,
                         foregroundColor: Colors.black,
                       ),
                       child: const Text("Login"),

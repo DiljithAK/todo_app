@@ -8,20 +8,25 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
+    return FutureBuilder<Map<String, dynamic>>(
       future: checkLoginStatus(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         }
-        final isLoggedIn = snapshot.data ?? false;
-        return isLoggedIn ? const Dashboard() : const LoginScreen();
+        final data = snapshot.data ?? {'isLoggedIn': false, 'name': ''};
+        return data['isLoggedIn']
+            ? Dashboard(username: data['name'] ?? "Blaa")
+            : const LoginScreen();
       },
     );
   }
 
-  Future<bool> checkLoginStatus() async {
+  Future<Map<String, dynamic>> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
+    return {
+      "isLoggedIn": prefs.getBool('isLoggedIn') ?? false,
+      'name': prefs.getString('name') ?? "",
+    };
   }
 }

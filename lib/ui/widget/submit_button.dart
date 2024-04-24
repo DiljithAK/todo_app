@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/constants/colors.dart';
 
 class SubmitButton extends StatelessWidget {
   final double? width;
@@ -22,8 +23,8 @@ class SubmitButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onBtnPress,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors().paleBlue,
+          foregroundColor: Colors.grey[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

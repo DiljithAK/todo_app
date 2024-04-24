@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class AppColors {
   late Color linkWater;
   late Color appWhite;
-  late Color bd;
+  late Color paleBlue;
 
   AppColors() {
     linkWater = materialColor("#fff0f4fc");
-    bd = materialColor("#ffBad1f6");
+    paleBlue = materialColor("#ffBad1f6");
     appWhite = materialColor("#ffffffff");
   }
 

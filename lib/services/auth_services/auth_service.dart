@@ -16,6 +16,8 @@ class AuthService {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('isLoggedIn', true);
         prefs.setString('token', jsonData['token']);
+        prefs.setString('name', jsonData['name']);
+        prefs.setString('email', jsonData['email']);
       }
     }
     return jsonData;

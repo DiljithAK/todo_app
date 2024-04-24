@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/constants/colors.dart';
 
 class CustomFloatingButton extends StatelessWidget {
   final VoidCallback onClickBtn;
@@ -10,8 +11,8 @@ class CustomFloatingButton extends StatelessWidget {
     return FloatingActionButton(
       onPressed: onClickBtn,
       shape: const CircleBorder(),
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
+      backgroundColor: AppColors().paleBlue,
+      foregroundColor: Colors.grey[800],
       child: const Icon(Icons.add),
     );
   }

@@ -9,13 +9,15 @@ import 'package:todo_app/ui/widget/submit_button.dart';
 import 'package:todo_app/ui/widget/todo_app_bar.dart';
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+  final String username;
+
+  const Dashboard({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TodoAppBar(
-        title: "ProTasker",
+        title: "Hi, $username",
         onMenuFun: () => log("Menu Icon Pressed!!!"),
       ),
       body: Consumer<TaskProvider>(builder: (context, value, child) {
