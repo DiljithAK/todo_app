@@ -8,19 +8,36 @@ import 'package:todo_app/ui/widget/custom_input_field.dart';
 import 'package:todo_app/ui/widget/submit_button.dart';
 import 'package:todo_app/ui/widget/todo_app_bar.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   final String username;
 
   const Dashboard({super.key, required this.username});
 
   @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  late TaskProvider _taskProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    _taskProvider.getTaskList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TodoAppBar(
-        title: "Hi, $username",
+        title: "Hi, ${widget.username}",
         onMenuFun: () => log("Menu Icon Pressed!!!"),
       ),
       body: Consumer<TaskProvider>(builder: (context, value, child) {
+        if(value.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return Center(
           child: ListView.builder(
             itemCount: value.todoTaskList.length,
@@ -30,17 +47,17 @@ class Dashboard extends StatelessWidget {
                   onChanged: (val) {
                     value.changeTaskStatus(val, index);
                   },
-                  value: value.todoTaskList[index]['isCompleted'],
+                  value: (value.todoTaskList[index]['status'] == 1),
                 ),
                 title: Text(
-                  value.todoTaskList[index]['taskName']!,
-                  style: value.todoTaskList[index]['isCompleted']
+                  value.todoTaskList[index]['task_name']!,
+                  style: (value.todoTaskList[index]['status'] == 1)
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),
                 subtitle: Text(
-                  value.todoTaskList[index]['taskDes']!,
-                  style: value.todoTaskList[index]['isCompleted']
+                  value.todoTaskList[index]['task_description']!,
+                  style: (value.todoTaskList[index]['status'] == 1)
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),

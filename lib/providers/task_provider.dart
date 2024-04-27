@@ -1,36 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/services/all_services/task_service.dart';
 
 class TaskProvider with ChangeNotifier {
+  // Form
   final taskFormKey = GlobalKey<FormState>();
+  // Form field controllers
   final TextEditingController taskNameController = TextEditingController();
   final TextEditingController taskDescriptionController =
       TextEditingController();
 
+  // Helper variables
   int editIndex = 0;
   bool isUpdate = false;
+  bool isLoading = false;
 
-  final List<Map<String, dynamic>> todoTaskList = [
-    {
-      "taskName": "Task 1",
-      "taskDes": "First Task Des",
-      "isCompleted": true,
-    },
-    {
-      "taskName": "Task 2",
-      "taskDes": "Second Task Des",
-      "isCompleted": false,
-    },
-    {
-      "taskName": "Task 3",
-      "taskDes": "Third Task Des",
-      "isCompleted": false,
-    },
-    {
-      "taskName": "Task 4",
-      "taskDes": "Fourth Task Des",
-      "isCompleted": false,
-    },
-  ];
+  List<Map<String, dynamic>> todoTaskList = [];
 
   void addTask() {
     String taskName = taskNameController.text;
@@ -44,8 +28,8 @@ class TaskProvider with ChangeNotifier {
   }
 
   void setUpdateVal(index) {
-    taskNameController.text = todoTaskList[index]['taskName'];
-    taskDescriptionController.text = todoTaskList[index]['taskDes'];
+    taskNameController.text = todoTaskList[index]['task_name'];
+    taskDescriptionController.text = todoTaskList[index]['task_description'];
     isUpdate = true;
     editIndex = index;
     notifyListeners();
@@ -74,5 +58,18 @@ class TaskProvider with ChangeNotifier {
     taskDescriptionController.clear();
     isUpdate = false;
     editIndex = 0;
+  }
+
+  void getTaskList() async {
+    isLoading = true;
+    final response = await TaskService.getTaskList();
+    List<Map<String, dynamic>> mapList = convertList(response['data']);
+    todoTaskList = mapList;
+    isLoading = false;
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> convertList(List<dynamic> list) {
+    return list.map((item) => item as Map<String, dynamic>).toList();
   }
 }

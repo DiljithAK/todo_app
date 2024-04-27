@@ -7,7 +7,9 @@ import 'package:todo_app/services/common/api_constants.dart';
 class Requests {
   static Future<http.Response> getRequest(String url) async {
     try {
-      return await http.get(Uri.parse("${APIConstants.baseURL}$url"));
+      Map<String, String> header = await APIConstants.getHeaderWithToken();
+      return await http.get(Uri.parse("${APIConstants.baseURL}$url"),
+          headers: header);
     } catch (e) {
       // Handle error
       throw Exception('Failed to perform GET request');
