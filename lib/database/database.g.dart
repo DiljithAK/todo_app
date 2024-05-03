@@ -63,6 +63,8 @@ class _$AppDatabase extends AppDatabase {
 
   TaskDao? _taskDaoInstance;
 
+  UserDao? _userDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -86,6 +88,8 @@ class _$AppDatabase extends AppDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Task` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `taskName` TEXT NOT NULL, `taskDescription` TEXT NOT NULL, `status` INTEGER NOT NULL, `isSync` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `age` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -96,6 +100,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   TaskDao get taskDao {
     return _taskDaoInstance ??= _$TaskDao(database, changeListener);
+  }
+
+  @override
+  UserDao get userDao {
+    return _userDaoInstance ??= _$UserDao(database, changeListener);
   }
 }
 
@@ -124,6 +133,17 @@ class _$TaskDao extends TaskDao {
                   'taskDescription': item.taskDescription,
                   'status': item.status,
                   'isSync': item.isSync
+                }),
+        _taskDeletionAdapter = DeletionAdapter(
+            database,
+            'Task',
+            ['id'],
+            (Task item) => <String, Object?>{
+                  'id': item.id,
+                  'taskName': item.taskName,
+                  'taskDescription': item.taskDescription,
+                  'status': item.status,
+                  'isSync': item.isSync
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -135,6 +155,8 @@ class _$TaskDao extends TaskDao {
   final InsertionAdapter<Task> _taskInsertionAdapter;
 
   final UpdateAdapter<Task> _taskUpdateAdapter;
+
+  final DeletionAdapter<Task> _taskDeletionAdapter;
 
   @override
   Future<List<Task>> findAllTasks() async {
@@ -155,6 +177,18 @@ class _$TaskDao extends TaskDao {
   }
 
   @override
+  Future<Task?> findTaskById(int taskId) async {
+    return _queryAdapter.query('SELECT * FROM Task WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Task(
+            id: row['id'] as int?,
+            taskName: row['taskName'] as String,
+            taskDescription: row['taskDescription'] as String,
+            status: row['status'] as int,
+            isSync: row['isSync'] as int),
+        arguments: [taskId]);
+  }
+
+  @override
   Future<void> insertTask(Task task) async {
     await _taskInsertionAdapter.insert(task, OnConflictStrategy.abort);
   }
@@ -162,5 +196,75 @@ class _$TaskDao extends TaskDao {
   @override
   Future<void> updateTask(Task user) async {
     await _taskUpdateAdapter.update(user, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteTask(Task task) async {
+    await _taskDeletionAdapter.delete(task);
+  }
+
+  @override
+  Future<void> deleteOrUpdateTask(int taskId) async {
+    if (database is sqflite.Transaction) {
+      await super.deleteOrUpdateTask(taskId);
+    } else {
+      await (database as sqflite.Database)
+          .transaction<void>((transaction) async {
+        final transactionDatabase = _$AppDatabase(changeListener)
+          ..database = transaction;
+        await transactionDatabase.taskDao.deleteOrUpdateTask(taskId);
+      });
+    }
+  }
+}
+
+class _$UserDao extends UserDao {
+  _$UserDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _userInsertionAdapter = InsertionAdapter(
+            database,
+            'User',
+            (User item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'age': item.age
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<User> _userInsertionAdapter;
+
+  @override
+  Future<List<User>> findAllUsers() async {
+    return _queryAdapter.queryList('SELECT * FROM User ORDER BY id DESC',
+        mapper: (Map<String, Object?> row) => User(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            age: row['age'] as int));
+  }
+
+  @override
+  Future<void> insertUser(User user) async {
+    await _userInsertionAdapter.insert(user, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<GetUser> findCurrentUser() async {
+    if (database is sqflite.Transaction) {
+      return super.findCurrentUser();
+    } else {
+      return (database as sqflite.Database)
+          .transaction<GetUser>((transaction) async {
+        final transactionDatabase = _$AppDatabase(changeListener)
+          ..database = transaction;
+        return transactionDatabase.userDao.findCurrentUser();
+      });
+    }
   }
 }

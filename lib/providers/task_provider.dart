@@ -56,9 +56,10 @@ class TaskProvider with ChangeNotifier {
     getTaskListWithoutLoading();
   }
 
-  void removeTask(int index) {
-    todoTaskList.removeAt(index);
-    notifyListeners();
+  void removeTask(int index) async {
+    final taskId = todoTaskList[index].id!;
+    await database.taskDao.deleteOrUpdateTask(taskId);
+    getTaskListWithoutLoading();
   }
 
   void clearTaskFields() {

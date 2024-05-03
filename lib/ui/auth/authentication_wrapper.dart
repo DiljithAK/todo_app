@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/providers/simple_signin_provider.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/ui/auth/login_screen.dart';
+// import 'package:todo_app/ui/auth/login_screen.dart';
+import 'package:todo_app/ui/auth/simple_signin.dart';
 import 'package:todo_app/ui/dashboard/dashboard.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
@@ -8,26 +11,32 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: checkLoginStatus(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
-        final data = snapshot.data ?? {'isLoggedIn': false, 'name': ''};
-        return data['isLoggedIn']
-            ? Dashboard(username: data['name'] ?? "Blaa")
-            : const LoginScreen();
-      },
-    );
+    return Consumer<SimpleSigninProvider>(builder: (context, value, child) {
+      return FutureBuilder<Map<String, dynamic>>(
+        future: checkLoginStatus(value),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+          final data = snapshot.data ?? {'isLoggedIn': false, 'name': ''};
+          return data['isLoggedIn']
+              ? Dashboard(username: data['name'] ?? "")
+              : const SimpleSignin();
+          // : const LoginScreen();
+        },
+      );
+    });
   }
 
-  Future<Map<String, dynamic>> checkLoginStatus() async {
+  Future<Map<String, dynamic>> checkLoginStatus(
+      SimpleSigninProvider provider) async {
+    final user = await provider.getCurrentUser();
+    if (user != null) {
+      return {'isLoggedIn': true, 'name': user.name};
+    } else {
+      return {'isLoggedIn': false};
+    }
     // SharedPreferences prefs = await SharedPreferences.getInstance();
-    return {
-      'isLoggedIn': true,
-      'name': 'Diljith A K',
-    };
     // return {
     //   "isLoggedIn": prefs.getBool('isLoggedIn') ?? false,
     //   'name': prefs.getString('name') ?? "",

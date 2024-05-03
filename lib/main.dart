@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/constants/colors.dart';
 import 'package:todo_app/database/database.dart';
 import 'package:todo_app/providers/login_provider.dart';
+import 'package:todo_app/providers/simple_signin_provider.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/ui/auth/authentication_wrapper.dart';
 
@@ -14,6 +15,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TaskProvider(database)),
+        ChangeNotifierProvider(create: (_) => SimpleSigninProvider(database)),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
       ],
       child: const MyApp(),

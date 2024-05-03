@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task_provider.dart';
+import 'package:todo_app/ui/dashboard/widget/bottom_sheet.dart';
+import 'package:todo_app/ui/dashboard/widget/task_tile.dart';
 import 'package:todo_app/ui/widget/custom_floating_button.dart';
-import 'package:todo_app/ui/widget/custom_input_field.dart';
-import 'package:todo_app/ui/widget/submit_button.dart';
 import 'package:todo_app/ui/widget/todo_app_bar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -38,115 +38,38 @@ class _DashboardState extends State<Dashboard> {
         if (value.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
+        if (value.todoTaskList.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "No task found!",
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text("Please add task."),
+              ],
+            ),
+          );
+        }
         return Center(
           child: ListView.builder(
             itemCount: value.todoTaskList.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                leading: Checkbox(
-                  onChanged: (val) {
-                    value.changeTaskStatus(index);
-                  },
-                  value: (value.todoTaskList[index].status == 2),
-                ),
-                title: Text(
-                  value.todoTaskList[index].taskName,
-                  style: (value.todoTaskList[index].status == 2)
-                      ? const TextStyle(decoration: TextDecoration.lineThrough)
-                      : null,
-                ),
-                subtitle: Text(
-                  value.todoTaskList[index].taskDescription,
-                  style: (value.todoTaskList[index].status == 2)
-                      ? const TextStyle(decoration: TextDecoration.lineThrough)
-                      : null,
-                ),
-                trailing: const Icon(Icons.sync, color: Colors.blue),
-                // IconButton(
-                //   icon: const Icon(Icons.delete, color: Colors.red),
-                //   onPressed: () => value.removeTask(index),
-                // ),
-                onTap: () {
-                  value.setUpdateVal(index);
-                  _showBottonSheet(context);
-                },
+              final item = value.todoTaskList[index];
+              final taskName = value.todoTaskList[index].taskName;
+              return TaskTile(
+                item: item,
+                taskName: taskName,
+                index: index,
               );
             },
           ),
         );
       }),
       floatingActionButton: CustomFloatingButton(
-        onClickBtn: () => _showBottonSheet(context),
+        onClickBtn: () => showBottonSheet(context),
       ),
     );
   }
-}
-
-void _showBottonSheet(BuildContext context) {
-  final hundredPercentageWidth = MediaQuery.of(context).size.width * 1;
-  final bottonSheetHeight = MediaQuery.of(context).size.height * 1;
-
-  showModalBottomSheet(
-    isScrollControlled: true,
-    useSafeArea: true,
-    context: context,
-    builder: (BuildContext context) {
-      return Consumer<TaskProvider>(builder: (context, value, child) {
-        return Container(
-          width: hundredPercentageWidth,
-          height: bottonSheetHeight,
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: value.taskFormKey,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const SizedBox(height: 10),
-                CustomInputField(
-                  controller: value.taskNameController,
-                  hintText: "Task name",
-                  fieldValidator: (value) {
-                    if (value == null || value == "") {
-                      return 'This field is required!';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                CustomInputField(
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  controller: value.taskDescriptionController,
-                  hintText: "Task description",
-                  fieldValidator: (value) {
-                    if (value == null || value == "") {
-                      return 'This field is required!';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 15),
-                SubmitButton(
-                  width: hundredPercentageWidth,
-                  height: 45,
-                  onBtnPress: () {
-                    if (value.taskFormKey.currentState!.validate()) {
-                      if (value.isUpdate) {
-                        value.updateTask();
-                      } else {
-                        value.addTask();
-                      }
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      });
-    },
-  ).then((value) {
-    Provider.of<TaskProvider>(context, listen: false).clearTaskFields();
-  });
 }

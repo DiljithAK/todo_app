@@ -6,8 +6,8 @@ class Task {
   final int? id;
   final String taskName;
   final String taskDescription;
-  final int status;
-  final int isSync;
+  int status;
+  int isSync;
 
   Task({
     this.id,
@@ -16,4 +16,9 @@ class Task {
     this.status = 1,
     this.isSync = 0,
   });
+
+  void markAsSynced() {
+    isSync = 0;
+    status = 0;
+  }
 }
