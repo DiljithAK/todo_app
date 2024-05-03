@@ -35,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
         onMenuFun: () => log("Menu Icon Pressed!!!"),
       ),
       body: Consumer<TaskProvider>(builder: (context, value, child) {
-        if(value.isLoading) {
+        if (value.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         return Center(
@@ -47,17 +47,17 @@ class _DashboardState extends State<Dashboard> {
                   onChanged: (val) {
                     value.changeTaskStatus(val, index);
                   },
-                  value: (value.todoTaskList[index]['status'] == 1),
+                  value: (value.todoTaskList[index].status == 1),
                 ),
                 title: Text(
-                  value.todoTaskList[index]['task_name']!,
-                  style: (value.todoTaskList[index]['status'] == 1)
+                  value.todoTaskList[index].taskName,
+                  style: (value.todoTaskList[index].status == 1)
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),
                 subtitle: Text(
-                  value.todoTaskList[index]['task_description']!,
-                  style: (value.todoTaskList[index]['status'] == 1)
+                  value.todoTaskList[index].taskDescription,
+                  style: (value.todoTaskList[index].status == 1)
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),
@@ -83,9 +83,11 @@ class _DashboardState extends State<Dashboard> {
 
 void _showBottonSheet(BuildContext context) {
   final hundredPercentageWidth = MediaQuery.of(context).size.width * 1;
-  final bottonSheetHeight = MediaQuery.of(context).size.height * 0.5;
+  final bottonSheetHeight = MediaQuery.of(context).size.height * 1;
 
   showModalBottomSheet(
+    isScrollControlled: true,
+    useSafeArea: true,
     context: context,
     builder: (BuildContext context) {
       return Consumer<TaskProvider>(builder: (context, value, child) {
@@ -96,35 +98,31 @@ void _showBottonSheet(BuildContext context) {
           child: Form(
             key: value.taskFormKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const SizedBox(height: 10),
-                Expanded(
-                  child: CustomInputField(
-                    controller: value.taskNameController,
-                    hintText: "Task name",
-                    fieldValidator: (value) {
-                      if (value == null || value == "") {
-                        return 'This field is required!';
-                      }
-                      return null;
-                    },
-                  ),
+                CustomInputField(
+                  controller: value.taskNameController,
+                  hintText: "Task name",
+                  fieldValidator: (value) {
+                    if (value == null || value == "") {
+                      return 'This field is required!';
+                    }
+                    return null;
+                  },
                 ),
-                // const SizedBox(height: 10),
-                Expanded(
-                  child: CustomInputField(
-                    maxLines: 3,
-                    keyboardType: TextInputType.multiline,
-                    controller: value.taskDescriptionController,
-                    hintText: "Task description",
-                    fieldValidator: (value) {
-                      if (value == null || value == "") {
-                        return 'This field is required!';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 10),
+                CustomInputField(
+                  maxLines: 3,
+                  keyboardType: TextInputType.multiline,
+                  controller: value.taskDescriptionController,
+                  hintText: "Task description",
+                  fieldValidator: (value) {
+                    if (value == null || value == "") {
+                      return 'This field is required!';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 15),
                 SubmitButton(

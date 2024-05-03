@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/ui/auth/login_screen.dart';
 import 'package:todo_app/ui/dashboard/dashboard.dart';
 
@@ -23,10 +23,14 @@ class AuthenticationWrapper extends StatelessWidget {
   }
 
   Future<Map<String, dynamic>> checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return {
-      "isLoggedIn": prefs.getBool('isLoggedIn') ?? false,
-      'name': prefs.getString('name') ?? "",
+      'isLoggedIn': true,
+      'name': 'Diljith A K',
     };
+    // return {
+    //   "isLoggedIn": prefs.getBool('isLoggedIn') ?? false,
+    //   'name': prefs.getString('name') ?? "",
+    // };
   }
 }

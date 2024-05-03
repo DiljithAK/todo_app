@@ -1,7 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:todo_app/services/all_services/task_service.dart';
+import 'package:todo_app/database/database.dart';
+import 'package:todo_app/models/local_models/task_model.dart';
+// import 'package:todo_app/services/all_services/task_service.dart';
 
 class TaskProvider with ChangeNotifier {
+  final AppDatabase database;
+
+  TaskProvider(this.database);
+
   // Form
   final taskFormKey = GlobalKey<FormState>();
   // Form field controllers
@@ -14,37 +22,35 @@ class TaskProvider with ChangeNotifier {
   bool isUpdate = false;
   bool isLoading = false;
 
-  List<Map<String, dynamic>> todoTaskList = [];
+  List<Task> todoTaskList = [];
 
-  void addTask() {
+  void addTask() async {
     String taskName = taskNameController.text;
     String taskdes = taskDescriptionController.text;
-    todoTaskList.add({
-      "taskName": taskName,
-      "taskDes": taskdes,
-      "isCompleted": false,
-    });
+    final task = Task(taskName: taskName, taskDescription: taskdes, status: 1);
+    await database.taskDao.insertTask(task);
+    getTaskListWithoutLoading();
     notifyListeners();
   }
 
   void setUpdateVal(index) {
-    taskNameController.text = todoTaskList[index]['task_name'];
-    taskDescriptionController.text = todoTaskList[index]['task_description'];
+    taskNameController.text = todoTaskList[index].taskName;
+    taskDescriptionController.text = todoTaskList[index].taskDescription;
     isUpdate = true;
     editIndex = index;
     notifyListeners();
   }
 
   void updateTask() {
-    String taskName = taskNameController.text;
-    String taskDes = taskDescriptionController.text;
-    todoTaskList[editIndex]['taskName'] = taskName;
-    todoTaskList[editIndex]['taskDes'] = taskDes;
+    // String taskName = taskNameController.text;
+    // String taskDes = taskDescriptionController.text;
+    // todoTaskList[editIndex].taskName = taskName;
+    // todoTaskList[editIndex].taskDescription = taskDes;
     notifyListeners();
   }
 
   void changeTaskStatus(bool? isCompleted, int index) {
-    todoTaskList[index]['isCompleted'] = isCompleted ?? false;
+    // todoTaskList[index].status = isCompleted ?? false;
     notifyListeners();
   }
 
@@ -62,11 +68,18 @@ class TaskProvider with ChangeNotifier {
 
   void getTaskList() async {
     isLoading = true;
-    final response = await TaskService.getTaskList();
-    List<Map<String, dynamic>> mapList = convertList(response['data']);
-    todoTaskList = mapList;
+    final task = await database.taskDao.findAllTasks();
+    inspect(task);
+    // final response = await TaskService.getTaskList();
+    // List<Map<String, dynamic>> mapList = convertList(response['data']);
+    // todoTaskList = mapList;
     isLoading = false;
     notifyListeners();
+  }
+
+  void getTaskListWithoutLoading() async {
+    final task = await database.taskDao.findAllTasks();
+    todoTaskList = task;
   }
 
   List<Map<String, dynamic>> convertList(List<dynamic> list) {
