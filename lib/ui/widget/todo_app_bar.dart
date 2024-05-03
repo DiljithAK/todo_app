@@ -12,7 +12,7 @@ class TodoAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title, style: TextStyle(color: Colors.grey[800])),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 23.0),
+          padding: const EdgeInsets.only(right: 15.0),
           child: IconButton(
             onPressed: onMenuFun,
             icon: Icon(Icons.sort, color: Colors.grey[800]),

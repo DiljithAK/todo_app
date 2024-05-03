@@ -45,26 +45,27 @@ class _DashboardState extends State<Dashboard> {
               return ListTile(
                 leading: Checkbox(
                   onChanged: (val) {
-                    value.changeTaskStatus(val, index);
+                    value.changeTaskStatus(index);
                   },
-                  value: (value.todoTaskList[index].status == 1),
+                  value: (value.todoTaskList[index].status == 2),
                 ),
                 title: Text(
                   value.todoTaskList[index].taskName,
-                  style: (value.todoTaskList[index].status == 1)
+                  style: (value.todoTaskList[index].status == 2)
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),
                 subtitle: Text(
                   value.todoTaskList[index].taskDescription,
-                  style: (value.todoTaskList[index].status == 1)
+                  style: (value.todoTaskList[index].status == 2)
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => value.removeTask(index),
-                ),
+                trailing: const Icon(Icons.sync, color: Colors.blue),
+                // IconButton(
+                //   icon: const Icon(Icons.delete, color: Colors.red),
+                //   onPressed: () => value.removeTask(index),
+                // ),
                 onTap: () {
                   value.setUpdateVal(index);
                   _showBottonSheet(context);

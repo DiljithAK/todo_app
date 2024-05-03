@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/database/database.dart';
 import 'package:todo_app/models/local_models/task_model.dart';
@@ -41,17 +39,21 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateTask() {
-    // String taskName = taskNameController.text;
-    // String taskDes = taskDescriptionController.text;
-    // todoTaskList[editIndex].taskName = taskName;
-    // todoTaskList[editIndex].taskDescription = taskDes;
-    notifyListeners();
+  void updateTask() async {
+    int id = todoTaskList[editIndex].id!;
+    String taskName = taskNameController.text;
+    String taskDes = taskDescriptionController.text;
+    int status = todoTaskList[editIndex].status;
+    final task = Task(
+        id: id, taskName: taskName, taskDescription: taskDes, status: status);
+    await database.taskDao.updateTask(task);
+    getTaskListWithoutLoading();
   }
 
-  void changeTaskStatus(bool? isCompleted, int index) {
-    // todoTaskList[index].status = isCompleted ?? false;
-    notifyListeners();
+  void changeTaskStatus(int index) async {
+    final taskId = todoTaskList[index].id!;
+    await database.taskDao.toggleTaskStatus(taskId);
+    getTaskListWithoutLoading();
   }
 
   void removeTask(int index) {
@@ -69,10 +71,7 @@ class TaskProvider with ChangeNotifier {
   void getTaskList() async {
     isLoading = true;
     final task = await database.taskDao.findAllTasks();
-    inspect(task);
-    // final response = await TaskService.getTaskList();
-    // List<Map<String, dynamic>> mapList = convertList(response['data']);
-    // todoTaskList = mapList;
+    todoTaskList = task;
     isLoading = false;
     notifyListeners();
   }
@@ -80,6 +79,7 @@ class TaskProvider with ChangeNotifier {
   void getTaskListWithoutLoading() async {
     final task = await database.taskDao.findAllTasks();
     todoTaskList = task;
+    notifyListeners();
   }
 
   List<Map<String, dynamic>> convertList(List<dynamic> list) {
