@@ -6,13 +6,11 @@ import 'package:todo_app/ui/dashboard/widget/bottom_sheet.dart';
 
 class TaskTile extends StatelessWidget {
   final Task item;
-  final String taskName;
   final int index;
 
   const TaskTile({
     super.key,
     required this.item,
-    required this.taskName,
     required this.index,
   });
 
@@ -24,14 +22,14 @@ class TaskTile extends StatelessWidget {
         background: Container(
           color: Colors.red[300],
           alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: 25),
+          padding: const EdgeInsets.only(right: 30),
           child: const Icon(Icons.delete, color: Colors.black),
         ),
         direction: DismissDirection.endToStart,
         onDismissed: (direction) {
           value.removeTask(index);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("$taskName removed successfully."),
+            content: const Text("Task removed successfully."),
             action: SnackBarAction(
               label: 'Done',
               onPressed: () {
@@ -52,19 +50,27 @@ class TaskTile extends StatelessWidget {
           title: Text(
             value.todoTaskList[index].taskName,
             style: (value.todoTaskList[index].status == 2)
-                ? const TextStyle(decoration: TextDecoration.lineThrough)
+                ? const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                  )
                 : null,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
           subtitle: Text(
             value.todoTaskList[index].taskDescription,
             style: (value.todoTaskList[index].status == 2)
-                ? const TextStyle(decoration: TextDecoration.lineThrough)
+                ? const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                  )
                 : null,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
           trailing: Icon(Icons.sync, color: Colors.blue[400]),
           onTap: () {
             value.setUpdateVal(index);
-            showBottonSheet(context);
+            showBottonSheet(context, "Update Task");
           },
         ),
       );

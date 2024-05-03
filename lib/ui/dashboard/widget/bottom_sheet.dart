@@ -4,13 +4,14 @@ import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/ui/widget/custom_input_field.dart';
 import 'package:todo_app/ui/widget/submit_button.dart';
 
-void showBottonSheet(BuildContext context) {
+void showBottonSheet(BuildContext context, pageheading) {
   final hundredPercentageWidth = MediaQuery.of(context).size.width * 1;
   final bottonSheetHeight = MediaQuery.of(context).size.height * 1;
 
   showModalBottomSheet(
     isScrollControlled: true,
-    useSafeArea: true,
+    // useSafeArea: true,
+    shape: const ContinuousRectangleBorder(),
     context: context,
     builder: (BuildContext context) {
       return Consumer<TaskProvider>(builder: (context, value, child) {
@@ -21,12 +22,18 @@ void showBottonSheet(BuildContext context) {
           child: Form(
             key: value.taskFormKey,
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 10),
+                Text(
+                  pageheading,
+                  style: const TextStyle(fontSize: 24),
+                  textAlign: TextAlign.left,
+                ),
                 const SizedBox(height: 10),
                 CustomInputField(
                   controller: value.taskNameController,
-                  hintText: "Task name",
+                  hintText: "Title",
                   fieldValidator: (value) {
                     if (value == null || value == "") {
                       return 'This field is required!';
@@ -36,10 +43,10 @@ void showBottonSheet(BuildContext context) {
                 ),
                 const SizedBox(height: 10),
                 CustomInputField(
-                  maxLines: 3,
+                  maxLines: 5,
                   keyboardType: TextInputType.multiline,
                   controller: value.taskDescriptionController,
-                  hintText: "Task description",
+                  hintText: "Description",
                   fieldValidator: (value) {
                     if (value == null || value == "") {
                       return 'This field is required!';

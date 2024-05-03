@@ -1,11 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/constants/colors.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/ui/dashboard/widget/bottom_sheet.dart';
 import 'package:todo_app/ui/dashboard/widget/task_tile.dart';
 import 'package:todo_app/ui/widget/custom_floating_button.dart';
+import 'package:todo_app/ui/widget/no_task_found.dart';
 import 'package:todo_app/ui/widget/todo_app_bar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -18,6 +18,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TaskProvider _taskProvider;
 
   @override
@@ -30,37 +31,65 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: TodoAppBar(
         title: "Hi, ${widget.username}",
-        onMenuFun: () => log("Menu Icon Pressed!!!"),
+        onMenuFun: () => _scaffoldKey.currentState?.openEndDrawer(),
+      ),
+      endDrawer: Drawer(
+        // Add your drawer content here
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: AppColors().paleBlue,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ProTasker',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 24,
+                    ),
+                  ),
+                  Text(
+                    'Version: 1.0.0',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.dark_mode),
+              title: const Text('Dark Mode'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: Consumer<TaskProvider>(builder: (context, value, child) {
         if (value.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         if (value.todoTaskList.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "No task found!",
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text("Please add task."),
-              ],
-            ),
-          );
+          return const NoTaskFound();
         }
         return Center(
           child: ListView.builder(
             itemCount: value.todoTaskList.length,
             itemBuilder: (context, index) {
               final item = value.todoTaskList[index];
-              final taskName = value.todoTaskList[index].taskName;
               return TaskTile(
                 item: item,
-                taskName: taskName,
                 index: index,
               );
             },
@@ -68,7 +97,7 @@ class _DashboardState extends State<Dashboard> {
         );
       }),
       floatingActionButton: CustomFloatingButton(
-        onClickBtn: () => showBottonSheet(context),
+        onClickBtn: () => showBottonSheet(context, "Add Task"),
       ),
     );
   }
