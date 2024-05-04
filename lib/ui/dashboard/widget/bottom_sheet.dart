@@ -27,7 +27,11 @@ void showBottonSheet(BuildContext context, pageheading) {
                 const SizedBox(height: 10),
                 Text(
                   pageheading,
-                  style: const TextStyle(fontSize: 24),
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Georgia'
+                  ),
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 10),

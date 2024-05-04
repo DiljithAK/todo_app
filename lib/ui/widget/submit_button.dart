@@ -29,7 +29,13 @@ class SubmitButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(btnText),
+        child: Text(
+          btnText,
+          style: const TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 20,
+          ),
+        ),
       ),
     );
   }

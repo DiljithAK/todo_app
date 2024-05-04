@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/constants/colors.dart';
+import 'package:todo_app/providers/settings_provider.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/ui/dashboard/widget/bottom_sheet.dart';
 import 'package:todo_app/ui/dashboard/widget/task_tile.dart';
@@ -20,11 +21,13 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TaskProvider _taskProvider;
+  late SettingsProvider _settingsProvider;
 
   @override
   void initState() {
     super.initState();
     _taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    _settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
     _taskProvider.getTaskList();
   }
 
@@ -52,8 +55,10 @@ class _DashboardState extends State<Dashboard> {
                   Text(
                     'ProTasker',
                     style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Georgia',
                       color: Colors.grey[700],
-                      fontSize: 24,
                     ),
                   ),
                   Text(
@@ -67,8 +72,32 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.dark_mode),
               title: const Text('Dark Mode'),
+              trailing: DropdownButton<String>(
+                value: _settingsProvider.selectedTheme,
+                icon: const Icon(Icons.expand_more),
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Georgia',
+                ),
+                underline: Container(),
+                onChanged: (String? newValue) {
+                  _settingsProvider.selectTheme(newValue);
+                  // setState(() {
+                  //   dropdownValue = newValue!;
+                  // });
+                },
+                items: _settingsProvider.themeList
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
               onTap: () {
                 Navigator.pop(context);
               },
