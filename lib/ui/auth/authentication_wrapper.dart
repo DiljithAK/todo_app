@@ -4,7 +4,6 @@ import 'package:todo_app/providers/simple_signin_provider.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:todo_app/ui/auth/login_screen.dart';
 import 'package:todo_app/ui/auth/simple_signin.dart';
-import 'package:todo_app/ui/auth/theme_selector.dart';
 import 'package:todo_app/ui/dashboard/dashboard.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
@@ -12,7 +11,6 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ThemeSelector();
     return Consumer<SimpleSigninProvider>(builder: (context, value, child) {
       return FutureBuilder<Map<String, dynamic>>(
         future: checkLoginStatus(value),

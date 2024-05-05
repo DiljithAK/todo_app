@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/constants/colors.dart';
 import 'package:todo_app/providers/simple_signin_provider.dart';
-import 'package:todo_app/ui/dashboard/dashboard.dart';
+import 'package:todo_app/ui/auth/theme_selector.dart';
 import 'package:todo_app/ui/widget/custom_input_field.dart';
 
 class SimpleSignin extends StatelessWidget {
@@ -66,12 +66,12 @@ class SimpleSignin extends StatelessWidget {
                                 .validate()) {
                               final user = await value.insertUser();
                               if (context.mounted) {
-                                if (user != null) {
+                                if (user??false) {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              Dashboard(username: user.name)));
+                                              const ThemeSelector()));
                                 } else {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(

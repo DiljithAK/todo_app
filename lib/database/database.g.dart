@@ -65,6 +65,8 @@ class _$AppDatabase extends AppDatabase {
 
   UserDao? _userDaoInstance;
 
+  SettingsDao? _settingsDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -90,6 +92,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `Task` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `taskName` TEXT NOT NULL, `taskDescription` TEXT NOT NULL, `status` INTEGER NOT NULL, `isSync` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `age` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Settings` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `theme` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -105,6 +109,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   UserDao get userDao {
     return _userDaoInstance ??= _$UserDao(database, changeListener);
+  }
+
+  @override
+  SettingsDao get settingsDao {
+    return _settingsDaoInstance ??= _$SettingsDao(database, changeListener);
   }
 }
 
@@ -264,6 +273,65 @@ class _$UserDao extends UserDao {
         final transactionDatabase = _$AppDatabase(changeListener)
           ..database = transaction;
         return transactionDatabase.userDao.findCurrentUser();
+      });
+    }
+  }
+}
+
+class _$SettingsDao extends SettingsDao {
+  _$SettingsDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _settingsInsertionAdapter = InsertionAdapter(
+            database,
+            'Settings',
+            (Settings item) =>
+                <String, Object?>{'id': item.id, 'theme': item.theme}),
+        _settingsUpdateAdapter = UpdateAdapter(
+            database,
+            'Settings',
+            ['id'],
+            (Settings item) =>
+                <String, Object?>{'id': item.id, 'theme': item.theme});
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Settings> _settingsInsertionAdapter;
+
+  final UpdateAdapter<Settings> _settingsUpdateAdapter;
+
+  @override
+  Future<List<Settings>> findAllSettings() async {
+    return _queryAdapter.queryList('SELECT * FROM Settings ORDER BY id DESC',
+        mapper: (Map<String, Object?> row) =>
+            Settings(id: row['id'] as int?, theme: row['theme'] as String));
+  }
+
+  @override
+  Future<void> insertSettings(Settings settings) async {
+    await _settingsInsertionAdapter.insert(settings, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateSettings(Settings settings) async {
+    await _settingsUpdateAdapter.update(settings, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<GetSettings> findCurrentSettings() async {
+    if (database is sqflite.Transaction) {
+      return super.findCurrentSettings();
+    } else {
+      return (database as sqflite.Database)
+          .transaction<GetSettings>((transaction) async {
+        final transactionDatabase = _$AppDatabase(changeListener)
+          ..database = transaction;
+        return transactionDatabase.settingsDao.findCurrentSettings();
       });
     }
   }

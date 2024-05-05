@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/constants/colors.dart';
 import 'package:todo_app/providers/settings_provider.dart';
+import 'package:todo_app/providers/simple_signin_provider.dart';
+import 'package:todo_app/ui/dashboard/dashboard.dart';
 
 class ThemeSelector extends StatelessWidget {
   const ThemeSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Theme'),
-      ),
-      body: Consumer<SettingsProvider>(
-        builder: (context, value, child) => Center(
+    final signInProvider =
+        Provider.of<SimpleSigninProvider>(context, listen: false);
+    return Consumer<SettingsProvider>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Theme'),
+        ),
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -43,34 +47,46 @@ class ThemeSelector extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: SizedBox(
-        // color: AppColors().linkWater,
-        height: MediaQuery.of(context).size.width * 0.15,
-        width: MediaQuery.of(context).size.width * 1,
-        child: GestureDetector(
-          onTap: () {
-            print("Tapped");
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "Next",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Georgia',
+        bottomNavigationBar: SizedBox(
+          // color: AppColors().linkWater,
+          height: MediaQuery.of(context).size.width * 0.15,
+          width: MediaQuery.of(context).size.width * 1,
+          child: GestureDetector(
+            onTap: () async {
+              final user = await signInProvider.getCurrentUser();
+              if (user != null && context.mounted) {
+                await value.insertTheme();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Dashboard(username: user.name)));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content:
+                      Text("Failed to sign up user, please try again later."),
+                ));
+              }
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "Next",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Georgia',
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.navigate_next,
-                size: 40,
-              ),
-              SizedBox(
-                width: 10,
-              )
-            ],
+                Icon(
+                  Icons.navigate_next,
+                  size: 40,
+                ),
+                SizedBox(
+                  width: 10,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -142,6 +158,17 @@ class ThemeContainer extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 10.0),
+                  child: Text(
+                    'Title',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Georgia',
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),

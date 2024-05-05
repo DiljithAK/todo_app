@@ -91,11 +91,11 @@ class _DashboardState extends State<Dashboard> {
                   // });
                 },
                 items: _settingsProvider.themeList
-                    .map<DropdownMenuItem<String>>((String value) {
+                    .map<DropdownMenuItem<String>>((Map<String, String> map) {
+                  String key = map.keys.first;
+                  String value = map[key]!;
                   return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
+                      value: key, child: Text(value));
                 }).toList(),
               ),
               onTap: () {

@@ -13,14 +13,17 @@ class SimpleSigninProvider with ChangeNotifier {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
 
-  Future<User?> insertUser() async {
+  Future<bool?> insertUser() async {
     final name = usernameController.text;
     final ageString = ageController.text;
-    final age = int.parse(ageString); 
-    final user = User(name: name, age: age);
-    await database.userDao.insertUser(user);
-    final currentUser = await database.userDao.findCurrentUser();
-    return currentUser.user;
+    try {
+      final age = int.parse(ageString);
+      final user = User(name: name, age: age);
+      await database.userDao.insertUser(user);
+      return true;
+    } on Exception catch (_) {
+      return false;
+    }
   }
 
   Future<User?> getCurrentUser() async {
