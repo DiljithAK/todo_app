@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/app/database/database.dart';
+import 'package:todo_app/app/core/database/database.dart';
 import 'package:todo_app/app/app.dart';
-import 'package:todo_app/app/providers/login_provider.dart';
-import 'package:todo_app/app/providers/settings_provider.dart';
-import 'package:todo_app/app/providers/simple_signin_provider.dart';
-import 'package:todo_app/app/providers/task_provider.dart';
+import 'package:todo_app/app/core/providers/login_provider.dart';
+import 'package:todo_app/app/core/providers/settings_provider.dart';
+import 'package:todo_app/app/core/providers/simple_signin_provider.dart';
+import 'package:todo_app/app/core/providers/task_provider.dart';
 
 class AppProviders extends StatelessWidget {
   final AppDatabase database;

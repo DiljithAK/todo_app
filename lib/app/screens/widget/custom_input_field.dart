@@ -7,6 +7,7 @@ class CustomInputField extends StatelessWidget {
   final String? Function(String?)? fieldValidator;
   final TextInputType? keyboardType;
   final int maxLines;
+  final TextCapitalization? textCapitalization;
 
   const CustomInputField({
     super.key,
@@ -15,6 +16,7 @@ class CustomInputField extends StatelessWidget {
     this.fieldValidator,
     this.keyboardType,
     this.maxLines = 1,
+    this.textCapitalization,
   });
 
   @override
@@ -23,6 +25,7 @@ class CustomInputField extends StatelessWidget {
       maxLines: maxLines,
       controller: controller,
       keyboardType: keyboardType,
+      textCapitalization: textCapitalization ?? TextCapitalization.none,
       decoration: InputDecoration(
         hintText: hintText,
         filled: true,

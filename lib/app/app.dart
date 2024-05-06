@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/app/providers/settings_provider.dart';
+import 'package:todo_app/app/core/providers/settings_provider.dart';
 import 'package:todo_app/app/screens/auth/authentication_wrapper.dart';
 import 'package:todo_app/app/theme/app_theme.dart';
 

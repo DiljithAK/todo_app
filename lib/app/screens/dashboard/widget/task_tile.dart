@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/app/models/local_models/task_model.dart';
-import 'package:todo_app/app/providers/task_provider.dart';
+import 'package:todo_app/app/core/models/local_models/task_model.dart';
+import 'package:todo_app/app/core/providers/task_provider.dart';
 import 'package:todo_app/app/screens/dashboard/widget/bottom_sheet.dart';
 
 class TaskTile extends StatelessWidget {

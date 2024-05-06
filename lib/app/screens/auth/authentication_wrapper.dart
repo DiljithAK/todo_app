@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/app/providers/simple_signin_provider.dart';
+import 'package:todo_app/app/core/providers/simple_signin_provider.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:todo_app/ui/auth/login_screen.dart';
 import 'package:todo_app/app/screens/auth/simple_signin.dart';

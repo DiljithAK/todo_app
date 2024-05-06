@@ -13,3 +13,11 @@ class User {
     required this.age,
   });
 }
+
+class GetUser {
+  final User? user;
+
+  GetUser({
+    this.user,
+  });
+}

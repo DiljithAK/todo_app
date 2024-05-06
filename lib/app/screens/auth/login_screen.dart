@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app/constants/colors.dart';
-import 'package:todo_app/app/providers/login_provider.dart';
+import 'package:todo_app/app/core/providers/login_provider.dart';
 import 'package:todo_app/app/screens/dashboard/dashboard.dart';
 import 'package:todo_app/app/screens/widget/custom_input_field.dart';
 import 'package:todo_app/app/screens/widget/custom_password_field.dart';

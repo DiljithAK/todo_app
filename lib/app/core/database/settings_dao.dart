@@ -1,5 +1,6 @@
 import 'package:floor/floor.dart';
-import 'package:todo_app/app/models/local_models/settings_model.dart';
+
+import '../models/local_models/settings_model.dart';
 
 @dao
 abstract class SettingsDao {

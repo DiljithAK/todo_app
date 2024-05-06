@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/app/database/database.dart';
-import 'package:todo_app/app/models/local_models/task_model.dart';
+import 'package:todo_app/app/core/database/database.dart';
+import 'package:todo_app/app/core/models/local_models/task_model.dart';
 // import 'package:todo_app/services/all_services/task_service.dart';
 
 class TaskProvider with ChangeNotifier {

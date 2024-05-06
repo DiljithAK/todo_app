@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/app/models/request_models/login_request_model.dart';
-import 'package:todo_app/app/services/common/api_constants.dart';
-import 'package:todo_app/app/services/common/requests.dart';
+
+import '../../models/request_models/login_request_model.dart';
+import '../common/api_constants.dart';
+import '../common/requests.dart';
 
 class AuthService {
   static Future<Map<String, dynamic>> loginUser(

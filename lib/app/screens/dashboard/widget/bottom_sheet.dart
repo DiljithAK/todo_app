@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/app/providers/task_provider.dart';
+import 'package:todo_app/app/core/providers/task_provider.dart';
 import 'package:todo_app/app/screens/widget/custom_input_field.dart';
 import 'package:todo_app/app/screens/widget/submit_button.dart';
 

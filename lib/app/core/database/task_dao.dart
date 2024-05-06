@@ -1,6 +1,7 @@
 import "package:floor/floor.dart";
+import "package:todo_app/app/core/models/local_models/task_model.dart";
 
-import "../models/local_models/task_model.dart";
+
 
 @dao
 abstract class TaskDao {

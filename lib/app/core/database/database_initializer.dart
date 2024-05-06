@@ -1,4 +1,4 @@
-import 'package:todo_app/app/database/database.dart';
+import 'package:todo_app/app/core/database/database.dart';
 
 class DatabaseInitializer {
   static Future<AppDatabase> initialize() async {

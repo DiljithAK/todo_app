@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:todo_app/app/services/common/api_constants.dart';
+import 'api_constants.dart';
 
 class Requests {
   static Future<http.Response> getRequest(String url) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/app/models/request_models/login_request_model.dart';
-import 'package:todo_app/app/services/all_services/auth_service.dart';
+import 'package:todo_app/app/core/services/all_services/auth_service.dart';
+
+import '../models/request_models/login_request_model.dart';
 
 class LoginProvider extends ChangeNotifier {
   final loginKey = GlobalKey<FormState>();

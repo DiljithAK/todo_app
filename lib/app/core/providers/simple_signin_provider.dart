@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/app/database/database.dart';
-import 'package:todo_app/app/models/local_models/user_model.dart';
+import 'package:todo_app/app/core/database/database.dart';
+
+import '../models/local_models/user_model.dart';
 
 class SimpleSigninProvider with ChangeNotifier {
   final AppDatabase database;

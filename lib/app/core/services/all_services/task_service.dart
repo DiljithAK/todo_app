@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:todo_app/app/services/common/api_constants.dart';
-import 'package:todo_app/app/services/common/requests.dart';
+import '../common/api_constants.dart';
+import '../common/requests.dart';
 
 class TaskService {
   static Future<Map<String, dynamic>> getTaskList() async {

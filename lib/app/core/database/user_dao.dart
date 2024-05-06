@@ -1,5 +1,4 @@
 import "package:floor/floor.dart";
-import "package:todo_app/app/models/local_models/get_user_model.dart";
 
 import "../models/local_models/user_model.dart";
 
